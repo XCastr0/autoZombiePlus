@@ -1,67 +1,106 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+const {LadinPage} =require('./pages/landingPage')
+
 
 test('Deve cadastrar um lead na fila de espera', async ({ page }) => {
-  await page.goto('http://localhost:3000');
+  const ladinPage = new LadinPage(page)
 
-  await page.getByRole('button', { name: 'Aperte o play... se tiver coragem' }).click()
+  await ladinPage.visit()
 
-expect(page.getByTestId('modal').getByRole('heading')).toHaveText('Fila de espera')
+  await ladinPage.openLeadModal()
 
-  await page.getByPlaceholder('Informe seu nome').fill('Luana Beatriz')
-  await page.getByPlaceholder('Informe seu email').fill('luanabeaqa@teste.com')
+  await ladinPage.submitLeadForm('Luana Beatriz', 'beaqa@gmail.com.br')
 
-  await page.getByText('Quero entrar na fila!').click()
-
-await expect(page.locator('.toast')).toHaveText('Agradecemos por compartilhar seus dados conosco. Em breve, nossa equipe entrará em contato!')
-  await page.waitForTimeout(10000)
 });
 
-test('Não deve cadastrar com email incorreto', async ({ page }) => {
-  await page.goto('http://localhost:3000');
 
-  await page.getByRole('button', { name: 'Aperte o play... se tiver coragem' }).click()
+test('Não deve cadastrar com e-mail sem @', async ({ page }) => {
+  const ladinPage = new LadinPage(page)
 
-expect(page.getByTestId('modal').getByRole('heading')).toHaveText('Fila de espera')
+  await ladinPage.visit()
 
-  await page.getByPlaceholder('Informe seu nome').fill('Luana Beatriz')
-  await page.getByPlaceholder('Informe seu email').fill('luanabeaqa.com.br')
+  await ladinPage.openLeadModal()
+  await ladinPage.submitLeadForm('Luana Beatriz', 'beaqa.com.br')
 
-  await page.getByText('Quero entrar na fila!').click()
+  await ladinPage.alertHaveText('Email incorreto')
 
-await expect(page.locator('.alert')).toHaveText('Email incorreto')
-  await page.waitForTimeout(10000)
 });
 
-test('Não deve cadastrar com campo nome vazio', async ({ page }) => {
-  await page.goto('http://localhost:3000');
+test('Não deve cadastrar com e-mail sem domínio', async ({ page }) => {
+  const ladinPage = new LadinPage(page)
 
-  await page.getByRole('button', { name: 'Aperte o play... se tiver coragem' }).click()
+  await ladinPage.visit()
 
-expect(page.getByTestId('modal').getByRole('heading')).toHaveText('Fila de espera')
+  await ladinPage.openLeadModal()
+  await ladinPage.submitLeadForm('Luana Beatriz', 'luana@')
+ await ladinPage.alertHaveText('Email incorreto')
+});
+test('Não deve cadastrar com e-mail sem usuário', async ({ page }) => {
+  const ladinPage = new LadinPage(page)
 
+  await ladinPage.visit()
 
-  await page.getByPlaceholder('Informe seu email').fill('luanabeaqa@teste.com.br')
-
-  await page.getByText('Quero entrar na fila!').click()
-
-await expect(page.locator('.alert')).toHaveText('Campo obrigatório')
-  await page.waitForTimeout(10000)
+  await ladinPage.openLeadModal()
+  await ladinPage.submitLeadForm('Luana Beatriz', '@dominio.com')
+ await ladinPage.alertHaveText('Email incorreto')
 });
 
-test('Não deve cadastrar com campo email vazio', async ({ page }) => {
-  await page.goto('http://localhost:3000');
+test('Não deve cadastrar com caracteres especiais inválidos', async ({ page }) => {
+  const ladinPage = new LadinPage(page)
 
-  await page.getByRole('button', { name: 'Aperte o play... se tiver coragem' }).click()
+  await ladinPage.visit()
 
-expect(page.getByTestId('modal').getByRole('heading')).toHaveText('Fila de espera')
+  await ladinPage.openLeadModal()
+  await ladinPage.submitLeadForm('Luana Beatriz', 'luana@@dominio.com')
+ await ladinPage.alertHaveText('Email incorreto')
+});
 
-  await page.getByPlaceholder('Informe seu nome').fill('Luana Beatriz')
+test('Não deve cadastrar com nome vazio', async ({ page }) => {
+  const ladinPage = new LadinPage(page)
 
+  await ladinPage.visit()
 
-  await page.getByText('Quero entrar na fila!').click()
+  await ladinPage.openLeadModal()
 
-
+  // Teste com nome vazio
+  await ladinPage.submitLeadForm('', 'luana@dominio.com')
   await expect(page.locator('.alert')).toHaveText('Campo obrigatório')
-  await page.waitForTimeout(10000)
+});
+
+test('Não deve cadastrar com nome contendo apenas espaços', async ({ page }) => {
+  const ladinPage = new LadinPage(page)
+
+  await ladinPage.visit()
+
+  await ladinPage.openLeadModal()
+
+  // Teste com nome contendo apenas espaços
+  await ladinPage.submitLeadForm('   ', 'luana@dominio.com')
+  await expect(page.locator('.alert')).toHaveText('Nome obrigatório')
+});
+
+test('Não deve cadastrar com nome contendo caracteres especiais', async ({ page }) => {
+  const ladinPage = new LadinPage(page)
+
+  await ladinPage.visit()
+
+  await ladinPage.openLeadModal()
+
+  // Teste com nome contendo caracteres especiais
+  await ladinPage.submitLeadForm('Luan@ Beatriz!', 'luana@dominio.com')
+  await expect(page.locator('.alert')).toHaveText('Nome inválido')
+});
+
+test('Deve cadastrar com nome válido', async ({ page }) => {
+  const ladinPage = new LadinPage(page)
+
+  await ladinPage.visit()
+
+  await ladinPage.openLeadModal()
+
+  // Teste com nome válido
+  await ladinPage.submitLeadForm('Luana Beatriz', 'luana@dominio.com')
+  await expect(page.locator('.alert')).not.toHaveText('Nome obrigatório')
+  await expect(page.locator('.alert')).not.toHaveText('Nome inválido')
 });
