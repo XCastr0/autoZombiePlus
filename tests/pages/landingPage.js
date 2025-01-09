@@ -2,7 +2,7 @@
 
 const { expect } = require("playwright/test");
 
-export class LadinPage{
+export class LandingPage{
 
     constructor(page){
         this.page = page
