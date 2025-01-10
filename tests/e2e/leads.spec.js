@@ -1,11 +1,13 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
-const {LandingPage} =require('./pages/landingPage')
+const {LandingPage} =require('../pages/landingPage')
+const {Toast} =require('../pages/components')
 
 let ladingPage
-
-test.beforeEach(async ({page})=>{
-  ladingPage =new LandingPage(page)
+let toast
+test.beforeEach(async({page})=>{
+  ladingPage = new LandingPage(page)
+toast = new Toast(page)
 })
 test('Deve cadastrar um lead na fila de espera', async ({ page }) => {
 
