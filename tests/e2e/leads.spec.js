@@ -2,7 +2,8 @@
 const { test, expect } = require('@playwright/test');
 const { faker} = require('@faker-js/faker');
 const {LandingPage} =require('../pages/landingPage')
-const {Toast} =require('../pages/components')
+const {Toast} =require('../pages/components');
+const { request } = require('http');
 
 let ladingPage
 let toast
@@ -21,7 +22,23 @@ const leadEmail = faker.internet.email()
   await ladingPage.submitLeadForm(leadName, leadEmail)
 
 });
-
+test('Não deve cadastrar quando email já existe', async ({ page,request }) => {
+  const leadName = faker.person.fullName()
+  const leadEmail = faker.internet.email()
+  
+ const newLead= await request.post('http://localhost:3333/leads', {
+    data:{
+      name:leadName,
+      email:leadEmail
+    }
+  })
+    await ladingPage.visit()
+  
+    await ladingPage.openLeadModal()
+  
+    await ladingPage.submitLeadForm(leadName, leadEmail)
+  expect(newLead.ok()).toBeTruthy()
+  });
 
 test('Não deve cadastrar com e-mail sem @', async ({ page }) => {
 
