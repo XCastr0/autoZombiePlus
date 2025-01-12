@@ -1,81 +1,65 @@
 🧟‍♂️ Zombie+ Automation Project
-Este projeto é uma automação de testes para o site Zombie+, desenvolvido utilizando a poderosa biblioteca Playwright. Aqui você encontrará detalhes sobre a estrutura do projeto, como configurá-lo e executar os testes.
+Este projeto realiza a automação de testes para o site Zombie+, utilizando a biblioteca Playwright. Os testes cobrem fluxos principais, como login, navegação e manipulação de filmes.
 
 🎯 Objetivo
-Automatizar o fluxo de teste do site Zombie+, garantindo a qualidade da experiência do usuário ao verificar cenários importantes, como login, navegação entre páginas e interações específicas.
+Automatizar cenários críticos do site Zombie+ para garantir qualidade e estabilidade, como login, cadastro de leads e manipulação de filmes.
 
 📂 Estrutura do Projeto
-A estrutura do projeto segue uma organização modular para facilitar o entendimento e a manutenção:
+A estrutura do projeto está organizada para facilitar a separação de responsabilidades e a reutilização de código:
+![image](https://github.com/user-attachments/assets/c2aec691-b9d3-4ce8-8de6-a0854d2c287b)
 
-bash
-Copiar código
-zombieplus-automation/
-├── tests/                     # Testes automatizados
-│   ├── login.spec.js          # Testes de login
-│   ├── navigation.spec.js     # Testes de navegação
-│   ├── video-playback.spec.js # Testes de reprodução de vídeo
-│   └── ...
-├── utils/                     # Arquivos utilitários e helpers
-│   └── helpers.js
-├── reports/                   # Relatórios gerados pelos testes
-├── playwright.config.js       # Configurações do Playwright
-├── package.json               # Dependências e scripts
-└── README.md                  # Documentação do projeto
+
+
 🚀 Configuração e Execução
 1️⃣ Pré-requisitos
-Antes de começar, certifique-se de que você tem os seguintes requisitos instalados:
+Antes de começar, você precisará:
 
 Node.js (versão LTS recomendada)
-npm ou yarn
-2️⃣ Clonar o repositório
-bash
-Copiar código
+npm
+2️⃣ Instalar dependências
+Clone o repositório e instale as dependências:
+
+
 git clone https://github.com/seu-usuario/zombieplus-automation.git
 cd zombieplus-automation
-3️⃣ Instalar dependências
-bash
-Copiar código
 npm install
+3️⃣ Configurar o ambiente
+Certifique-se de que os dados necessários estão no arquivo movies.json, dentro de tests/support/fixtures/.
+
 4️⃣ Executar os testes
-Para rodar os testes, utilize o comando:
+Para rodar todos os testes:
 
-bash
-Copiar código
 npx playwright test
-5️⃣ Gerar relatório
-Após a execução dos testes, você pode gerar um relatório interativo:
-
+Para executar um teste específico:
 bash
 Copiar código
+npx playwright test tests/e2e/login.spec.js
+5️⃣ Gerar relatório
+Depois de rodar os testes, você pode gerar um relatório:
+
 npx playwright show-report
 📝 Testes Automatizados
-Os seguintes cenários foram automatizados:
+Os seguintes cenários estão cobertos:
 
-Login
-
-Validação de credenciais válidas e inválidas.
-Teste de mensagens de erro para campos obrigatórios.
-Navegação
-
-Garantia de que o menu principal leva às páginas corretas.
-Testes de responsividade em diferentes tamanhos de tela.
-Reprodução de Vídeo
-
-Verificação se os vídeos são reproduzidos corretamente.
-Teste de mensagens de erro para vídeos indisponíveis.
+1. Login (login.spec.js)
+Verificar login com credenciais válidas.
+Verificar mensagens de erro com credenciais inválidas.
+Testar fluxo de logout.
+2. Leads (leads.spec.js)
+Criar novos leads através do formulário.
+Validar campos obrigatórios.
+Verificar envio duplicado.
+3. Filmes (movies.spec.js)
+Listar filmes disponíveis.
+Reproduzir um filme selecionado.
+Adicionar filmes aos favoritos.
 ⚙️ Tecnologias Utilizadas
-Playwright: Biblioteca para automação de navegadores.
-Node.js: Ambiente de execução JavaScript.
-Allure Reports: Para gerar relatórios detalhados (opcional).
-GitHub Actions: Configurado para integração contínua (se aplicável).
-🤝 Contribuição
-Se você deseja contribuir para este projeto:
+Playwright: Automação de navegadores para testes de ponta a ponta.
+JavaScript: Linguagem principal do projeto.
+JSON: Para fixtures e dados de teste.
+Relatórios do Playwright: Visualizar resultados detalhados.
+📈 Relatórios
+Os relatórios são gerados automaticamente na pasta playwright-report após a execução dos testes. Para abrir o relatório:
 
-Faça um fork do repositório.
-Crie uma branch para sua funcionalidade (git checkout -b feature/nova-funcionalidade).
-Envie suas alterações por meio de um pull request.
-📞 Contato
-Se tiver dúvidas ou sugestões, entre em contato comigo:
+npx playwright show-report
 
-LinkedIn: Beatriz Castro
-GitHub: XCastr0
