@@ -20,7 +20,7 @@ npm
 Clone o repositório e instale as dependências:
 
 
-git clone https://github.com/seu-usuario/zombieplus-automation.git
+git clone https://github.com/XCastr0/autoZombiePlus/
 cd zombieplus-automation
 npm install
 3️⃣ Configurar o ambiente
